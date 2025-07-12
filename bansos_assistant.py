@@ -52,40 +52,36 @@ elif page == "📷 Cek Registrasi dari KTP":
     st.markdown("Unggah foto KTP Anda untuk mengecek apakah Anda **terdaftar di DTKS sebagai penerima bansos**. (Simulasi untuk demo hackathon)")
 
     uploaded_file = st.file_uploader("📤 Unggah Foto KTP", type=["png", "jpg", "jpeg"])
+
     if uploaded_file:
-        st.image(uploaded_file, caption="Foto KTP Anda", use_column_width=True)
-        st.markdown("🔍 **Menjalankan OCR untuk ekstraksi data...**")
+        image = Image.open(uploaded_file)
+        st.image(image, caption="Foto KTP Anda", use_column_width=True)
+        st.markdown("🔍 **Menjalankan ekstraksi data menggunakan AI...**")
 
         with st.spinner("Mengekstrak data dari KTP..."):
-            time.sleep(2)  # simulate OCR delay
-            extracted_data = {
-                "Nama": "Putranegara Riauwindu",
-                "NIK": "3275090801920012",
-                "Provinsi": "Banten",
-                "Kabupaten/Kota": "Tangerang Selatan",
-                "Kecamatan": "Ciputat Timur",
-                "Kelurahan": "Pisangan"
-            }
-
-        st.success("✅ Data berhasil diekstrak:")
-        st.json(extracted_data)
+            response = model.generate_content([
+                "Tolong ekstrak informasi dari KTP berikut. Ambil data: Nama, NIK, Provinsi, Kabupaten/Kota, Kecamatan, dan Kelurahan. Formatkan hasil dalam JSON.",
+                image
+            ])
+            st.success("✅ Data berhasil diekstrak:")
+            st.code(response.text, language="json")
 
         st.markdown("🔗 **Mengecek ke sistem DTKS Kemensos (simulasi)...**")
         with st.spinner("Menghubungkan ke API Kemensos..."):
-            time.sleep(2)  # simulate API delay
+            time.sleep(2)
 
-            if extracted_data["Nama"].lower() == "putranegara riauwindu":
-                is_registered = True
+            if "Putranegara Riauwindu" in response.text:
+                is_registered = False
                 bansos_type = "BPNT"
                 tahap = "Tahap 2 - 2025"
             else:
                 is_registered = False
 
         if is_registered:
-            st.success(f"🎉 {extracted_data['Nama']} terdaftar sebagai penerima **{bansos_type} ({tahap})**.")
+            st.success(f"🎉 Anda terdaftar sebagai penerima **{bansos_type} ({tahap})**.")
             st.markdown("📍 Silakan cek pencairan bantuan Anda di e-Warong terdekat atau melalui aplikasi Cek Bansos.")
         else:
-            st.error(f"⚠️ {extracted_data['Nama']} belum terdaftar di DTKS.")
+            st.error("⚠️ Anda belum terdaftar di DTKS.")
             st.markdown("""
             👉 Langkah berikutnya:
             - Kunjungi RT/RW Anda dan minta diusulkan masuk ke DTKS
