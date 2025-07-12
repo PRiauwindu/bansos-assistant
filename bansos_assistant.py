@@ -1,9 +1,11 @@
 import streamlit as st
 import google.generativeai as genai
 import time
+import pytesseract
+from PIL import Image
 
-# --- Configure Gemini API ---
-genai.configure(api_key="AIzaSyCXcAaliOMZxUmPEmOfvzRvlvfjEdFbWGs")  # Replace with your actual Gemini API key
+# Configure Gemini API Key from Streamlit Secrets
+genai.configure(api_key=st.secrets["GEMINI_API_KEY"])
 model = genai.GenerativeModel("gemini-2.5-flash")
 
 # --- Streamlit UI Configuration ---
