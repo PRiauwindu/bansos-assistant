@@ -82,7 +82,7 @@ streamlit run bansos_assistant.py
 
 ## 🌟 Credits
 
-Built by [Putranegara Riauwindu](https://github.com/putranegar), a Certified Financial Planner and Senior Analyst with a mission to scale digital inclusion through AI-powered tools.
+Built by [Putranegara Riauwindu](https://github.com/PRiauwindu), a Certified Financial Planner and Senior Analyst with a mission to scale digital inclusion through AI-powered tools.
 
 ---
 
